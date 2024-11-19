@@ -61,7 +61,7 @@ ENV AGENT_TOOLSDIRECTORY=/opt/hostedtoolcache
 
 RUN mkdir -p /opt/hostedtoolcache
 
-ARG GH_RUNNER_VERSION="2.309.0"
+ARG GH_RUNNER_VERSION="2.320.0"
 
 ARG TARGETPLATFORM
 
@@ -87,6 +87,4 @@ COPY scripts/token.sh scripts/main.sh scripts/app_token.sh /
 
 RUN chmod +x /token.sh /main.sh /app_token.sh
 
-ENTRYPOINT ["/sbin/init", "--log-level=err"]
-
-CMD ["./main.sh"]
+ENTRYPOINT ["../main.sh"]
