@@ -21,7 +21,7 @@ function create {
 
     sleep 4
 
-    docker exec -w /actions-runner --user runner "$name" "../main.sh"
+    docker exec -w /actions-runner "$name" "../main.sh"
 }
 
 function main() {
