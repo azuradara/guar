@@ -83,8 +83,8 @@ RUN chmod +x /actions-runner/install_actions.sh \
   && rm /actions-runner/install_actions.sh \
   && chown runner /_work /actions-runner /opt/hostedtoolcache
 
-COPY scripts/token.sh scripts/main.sh scripts/app_token.sh /
+COPY scripts/token.sh scripts/main.sh scripts/app_token.sh /scripts/entrypoint.sh /
 
-RUN chmod +x /token.sh /main.sh /app_token.sh
+RUN chmod +x /token.sh /main.sh /app_token.sh /entrypoint.sh
 
-ENTRYPOINT ["../main.sh"]
+ENTRYPOINT ["/entrypoint.sh"]

@@ -1,7 +1,5 @@
 #!/usr/bin/dumb-init /bin/bash
 
-/sbin/init --log-level=err
-
 export RUNNER_ALLOW_RUNASROOT=1
 export PATH=${PATH}:/actions-runner
 

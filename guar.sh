@@ -17,7 +17,8 @@ function create {
         -e RUNNER_NAME="$name" \
         -e RUNNER_GROUP="" \
         -e LABELS="" \
-        --name "$name" azuradara/guar:latest
+        --name "$name" azuradara/guar:latest \
+        /main.sh
 }
 
 function main() {
