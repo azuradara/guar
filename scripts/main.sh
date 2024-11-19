@@ -140,7 +140,7 @@ configure_runner() {
 
   [[ ! -d "${_RUNNER_WORKDIR}" ]] && mkdir "${_RUNNER_WORKDIR}"
 
-  ./svc.sh install
+  ./svc.sh install runner
   ./svc.sh start
 }
 
