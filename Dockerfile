@@ -6,25 +6,56 @@
 
 FROM ubuntu:jammy
 
-LABEL maintainer="dara-@outlook.jp"
+RUN apt-get update &&                            \
+    apt-get install -y --no-install-recommends   \
+            systemd                              \
+            systemd-sysv                         \
+            libsystemd0                          \
+            ca-certificates                      \
+            dbus                                 \
+            iptables                             \
+            iproute2                             \
+            kmod                                 \
+            locales                              \
+            sudo                                 \
+            udev &&                              \
+                                                 \
+    echo "ReadKMsg=no" >> /etc/systemd/journald.conf &&               \
+                                                                      \
+    apt-get clean -y &&                                               \
+    rm -rf                                                            \
+       /var/cache/debconf/*                                           \
+       /var/lib/apt/lists/*                                           \
+       /var/log/*                                                     \
+       /tmp/*                                                         \
+       /var/tmp/*                                                     \
+       /usr/share/doc/*                                               \
+       /usr/share/man/*                                               \
+       /usr/share/local/* &&                                          \
+                                                                      \
+    useradd --create-home --shell /bin/bash admin && echo "admin:admin" | chpasswd && adduser admin sudo
 
-RUN apt-get update && apt-get install --no-install-recommends -y \
-  apt-transport-https \
-  ca-certificates \
-  curl \
-  gnupg-agent \
-  software-properties-common
+RUN systemctl mask systemd-udevd.service \
+                   systemd-udevd-kernel.socket \
+                   systemd-udevd-control.socket \
+                   systemd-modules-load.service \
+                   sys-kernel-debug.mount \
+                   sys-kernel-tracing.mount
 
-RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
+STOPSIGNAL SIGRTMIN+3
 
-RUN apt-key fingerprint 0EBFCD88
+RUN apt-get update && apt-get install -y curl \
+    && rm -rf /var/lib/apt/lists/* \
+    && curl -fsSL https://get.docker.com -o get-docker.sh && sh get-docker.sh \
+    && usermod -a -G docker admin
+ADD https://raw.githubusercontent.com/docker/docker-ce/master/components/cli/contrib/completion/bash/docker /etc/bash_completion.d/docker.sh
 
-RUN add-apt-repository \
-  "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
-  $(lsb_release -cs) \
-  stable"
+RUN apt-get update && apt-get install --no-install-recommends -y openssh-server \
+    && rm -rf /var/lib/apt/lists/* \
+    && mkdir /home/admin/.ssh \
+    && chown admin:admin /home/admin/.ssh
 
-RUN apt-get update && apt-get install --no-install-recommends -y docker-ce docker-ce-cli containerd.io
+EXPOSE 22
 
 ENV AGENT_TOOLSDIRECTORY=/opt/hostedtoolcache
 
@@ -56,6 +87,6 @@ COPY scripts/token.sh scripts/main.sh scripts/app_token.sh /
 
 RUN chmod +x /token.sh /main.sh /app_token.sh
 
-ENTRYPOINT ["/main.sh"]
+ENTRYPOINT ["/sbin/init", "--log-level=err"]
 
-CMD ["./bin/Runner.Listener", "run", "--startuptype", "service"]
+CMD ["./main.sh"]

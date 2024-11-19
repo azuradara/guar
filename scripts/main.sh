@@ -3,7 +3,7 @@
 export RUNNER_ALLOW_RUNASROOT=1
 export PATH=${PATH}:/actions-runner
 
-export -n ACCESS_TOKEN
+export -n ACCESS_TOKEN  
 export -n RUNNER_TOKEN
 export -n APP_ID
 export -n APP_PRIVATE_KEY
@@ -140,6 +140,7 @@ configure_runner() {
 
   [[ ! -d "${_RUNNER_WORKDIR}" ]] && mkdir "${_RUNNER_WORKDIR}"
 
+  ./svc.sh
 }
 
 if [[ -n "${CONFIGURED_ACTIONS_RUNNER_FILES_DIR}" ]]; then
