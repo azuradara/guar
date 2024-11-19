@@ -67,7 +67,7 @@ ARG TARGETPLATFORM
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
-RUN apt-get update && apt-get install -y --no-install-recommends dumb-init jq \
+RUN apt-get update && apt-get install -y --no-install-recommends dumb-init jq wget build-essential \
   && groupadd -g 121 runner \
   && useradd -mr -d /home/runner -u 1001 -g 121 runner \
   && usermod -aG sudo runner \
