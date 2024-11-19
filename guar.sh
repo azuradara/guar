@@ -17,8 +17,11 @@ function create {
         -e RUNNER_NAME="$name" \
         -e RUNNER_GROUP="" \
         -e LABELS="" \
-        --name "$name" azuradara/guar:latest \
-        /main.sh
+        --name "$name" azuradara/guar:latest 
+
+    sleep 4
+
+    docker exec -w /actions_runner "$name" "../main.sh"
 }
 
 function main() {
