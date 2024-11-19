@@ -140,7 +140,8 @@ configure_runner() {
 
   [[ ! -d "${_RUNNER_WORKDIR}" ]] && mkdir "${_RUNNER_WORKDIR}"
 
-  ./svc.sh
+  ./svc.sh install
+  ./svc.sh start
 }
 
 if [[ -n "${CONFIGURED_ACTIONS_RUNNER_FILES_DIR}" ]]; then
