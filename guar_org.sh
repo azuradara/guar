@@ -25,7 +25,7 @@ function create {
 }
 
 function main() {
-    if [[ $# -ne 4 ]]; then
+    if [[ $# -ne 3 ]]; then
         printf "\nerror: Unexpected number of arguments provided\n"
         printf "\nUsage: ./guar.sh <runner-name> <org> <runner-token>\n\n"
         exit 2
