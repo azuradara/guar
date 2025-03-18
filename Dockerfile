@@ -77,14 +77,17 @@ RUN apt-get update && apt-get install -y --no-install-recommends dumb-init jq wg
 WORKDIR /actions-runner
 
 COPY scripts/install_actions.sh /actions-runner
+COPY scripts/cleanup.sh /actions-runner
 
-RUN chmod +x /actions-runner/install_actions.sh \
-  && /actions-runner/install_actions.sh ${GH_RUNNER_VERSION} ${TARGETPLATFORM} \
-  && rm /actions-runner/install_actions.sh \
-  && chown runner /_work /actions-runner /opt/hostedtoolcache
+RUN chmod +x /actions-runner/install_actions.sh /actions-runner/cleanup.sh \
+&& /actions-runner/install_actions.sh ${GH_RUNNER_VERSION} ${TARGETPLATFORM} \
+&& rm /actions-runner/install_actions.sh \
+&& chown runner /_work /actions-runner /opt/hostedtoolcache
 
 COPY scripts/token.sh scripts/main.sh scripts/app_token.sh /
 
 RUN chmod +x /token.sh /main.sh /app_token.sh
+
+RUN echo "ACTIONS_RUNNER_HOOK_JOB_COMPLETED=/actions-runner/cleanup.sh" >> /actions-runner/.env
 
 ENTRYPOINT ["/sbin/init", "--log-level=err"]
