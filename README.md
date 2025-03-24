@@ -13,7 +13,7 @@ Sysbox provides stronger isolation among GHA runner instances and between runner
 Download the latest Sysbox package from the [Sysbox releases](https://github.com/nestybox/sysbox/releases) page:
 
 ```shell
-wget https://downloads.nestybox.com/sysbox/releases/v0.6.5/sysbox-ce_0.6.5-0.linux_amd64.deb
+wget https://downloads.nestybox.com/sysbox/releases/v0.6.6/sysbox-ce_0.6.6-0.linux_amd64.deb
 ```
 
 If Docker is running on the host, stop and remove all containers as follows:
@@ -26,7 +26,7 @@ Install the Sysbox package and follow the installer instructions, `jq` is needed
 
 ```shell
 sudo apt-get install jq
-sudo apt-get install ./sysbox-ce_0.6.5-0.linux_amd64.deb
+sudo apt-get install ./sysbox-ce_0.6.6-0.linux_amd64.deb
 ```
 
 Verify that Sysbox's Systemd units have been properly installed, and associated daemons are properly running:
