@@ -28,6 +28,8 @@ template:
         env:
           - name: DOCKER_HOST
             value: unix:///var/run/docker.sock
+          - name: RUNNER_LABELS
+            value: self-hosted,linux
         volumeMounts:
           - name: work
             mountPath: /home/runner/_work
