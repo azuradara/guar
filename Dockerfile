@@ -16,6 +16,7 @@ RUN curl -fsSL https://packagecloud.io/install/repositories/github/git-lfs/scrip
         libmemcached-dev \
         libzstd-dev \
         default-mysql-client \
+    && ln -s /usr/bin/mysql /usr/bin/mariadb \
     && ln -s /usr/bin/mysqldump /usr/bin/mariadb-dump \
     && rm -rf /var/lib/apt/lists/*
 

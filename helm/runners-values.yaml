@@ -18,6 +18,8 @@ scaleSetLabels:
 
 template:
   spec:
+    securityContext:
+      fsGroup: 123
     initContainers:
       - name: init-dind-externals
         image: azuradara/guarc:latest
@@ -34,11 +36,21 @@ template:
         env:
           - name: DOCKER_HOST
             value: unix:///var/run/docker.sock
+          - name: AGENT_TOOLSDIRECTORY
+            value: /opt/hostedtoolcache
         volumeMounts:
           - name: work
             mountPath: /home/runner/_work
           - name: dind-sock
             mountPath: /var/run
+          - name: composer-cache
+            mountPath: /home/runner/.composer/cache
+          - name: npm-cache
+            mountPath: /home/runner/.npm
+          - name: pnpm-store
+            mountPath: /home/runner/.local/share/pnpm/store
+          - name: tool-cache
+            mountPath: /opt/hostedtoolcache
       - name: dind
         image: docker:dind
         args:
@@ -61,3 +73,19 @@ template:
         emptyDir: {}
       - name: dind-externals
         emptyDir: {}
+      - name: composer-cache
+        hostPath:
+          path: /var/cache/arc/composer
+          type: DirectoryOrCreate
+      - name: npm-cache
+        hostPath:
+          path: /var/cache/arc/npm
+          type: DirectoryOrCreate
+      - name: pnpm-store
+        hostPath:
+          path: /var/cache/arc/pnpm
+          type: DirectoryOrCreate
+      - name: tool-cache
+        hostPath:
+          path: /var/cache/arc/hostedtoolcache
+          type: DirectoryOrCreate
