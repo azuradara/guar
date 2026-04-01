@@ -19,4 +19,5 @@ RUN curl -fsSL https://packagecloud.io/install/repositories/github/git-lfs/scrip
     && ln -s /usr/bin/mysqldump /usr/bin/mariadb-dump \
     && rm -rf /var/lib/apt/lists/*
 
+ENV USER=runner
 USER runner
