@@ -5,17 +5,21 @@ set -o nounset
 NAMESPACE_CONTROLLER="arc-systems"
 NAMESPACE_RUNNERS="arc-runners"
 
-install_k3s() {
-    if command -v k3s &>/dev/null; then
-        echo "k3s already installed, skipping"
-        return
-    fi
-    echo "Installing k3s..."
-    curl -sfL https://get.k3s.io | sh -
+setup_kubeconfig() {
     mkdir -p ~/.kube
     sudo cp /etc/rancher/k3s/k3s.yaml ~/.kube/config
     sudo chown "$(id -u):$(id -g)" ~/.kube/config
     export KUBECONFIG=~/.kube/config
+}
+
+install_k3s() {
+    if command -v k3s &>/dev/null; then
+        echo "k3s already installed, skipping"
+    else
+        echo "Installing k3s..."
+        curl -sfL https://get.k3s.io | sh -
+    fi
+    setup_kubeconfig
 }
 
 install_helm() {
