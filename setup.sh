@@ -39,6 +39,15 @@ build_image() {
     docker save "$RUNNER_IMAGE" | sudo k3s ctr images import -
 }
 
+setup_cache_dirs() {
+    sudo mkdir -p \
+        /var/cache/arc/composer \
+        /var/cache/arc/npm \
+        /var/cache/arc/pnpm \
+        /var/cache/arc/hostedtoolcache
+    sudo chown -R 1001:123 /var/cache/arc
+}
+
 install_arc_controller() {
     echo "Installing ARC controller..."
     helm upgrade --install arc \
@@ -91,6 +100,7 @@ main() {
     install_helm
     build_image
     kubectl create namespace "$NAMESPACE_RUNNERS" --dry-run=client -o yaml | kubectl apply -f -
+    setup_cache_dirs
     install_arc_controller
     create_secret "$org" "$pat"
     install_runners "$org" "$max_runners"
