@@ -62,6 +62,7 @@ install_runners() {
         --namespace "$NAMESPACE_RUNNERS" \
         --create-namespace \
         --set "githubConfigUrl=https://github.com/${org}" \
+        --set "minRunners=1" \
         --set "maxRunners=${max_runners}" \
         -f helm/runners-values.yaml \
         oci://ghcr.io/actions/actions-runner-controller-charts/gha-runner-scale-set \

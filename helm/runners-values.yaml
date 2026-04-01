@@ -12,9 +12,6 @@
 # Secret created by setup.sh
 githubConfigSecret: arc-github-secret
 
-# Scale from zero — runners only exist while jobs are running.
-minRunners: 1
-
 template:
   spec:
     initContainers:
