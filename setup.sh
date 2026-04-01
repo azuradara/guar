@@ -87,7 +87,7 @@ main() {
     install_runners "$org" "$max_runners"
 
     echo ""
-    echo "Done. Runners will scale 0 → $max_runners as jobs are queued."
+    echo "Done. Runners will scale 1 → $max_runners as jobs are queued."
     echo "Watch: kubectl get pods -n $NAMESPACE_RUNNERS -w"
 }
 
