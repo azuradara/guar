@@ -1,0 +1,14 @@
+# ARC scale set controller
+# https://github.com/actions/actions-runner-controller
+#
+# Install:
+#   helm upgrade --install arc \
+#     --namespace arc-systems --create-namespace \
+#     -f helm/controller-values.yaml \
+#     oci://ghcr.io/actions/actions-runner-controller-charts/gha-runner-scale-set-controller
+
+replicaCount: 1
+
+# Restrict the controller to only watch the runners namespace.
+flags:
+  watchSingleNamespace: "arc-runners"
