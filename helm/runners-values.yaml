@@ -12,7 +12,7 @@
 # Secret created by setup.sh
 githubConfigSecret: arc-github-secret
 
-runnerScaleSetLabels:
+scaleSetLabels:
   - self-hosted
   - linux
 
