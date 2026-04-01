@@ -20,14 +20,16 @@ template:
   spec:
     initContainers:
       - name: init-dind-externals
-        image: ghcr.io/actions/actions-runner:latest
+        image: azuradara/guarc:latest
+        imagePullPolicy: IfNotPresent
         command: ['cp', '-r', '-v', '/home/runner/externals/.', '/home/runner/tmpDir/']
         volumeMounts:
           - name: dind-externals
             mountPath: /home/runner/tmpDir
     containers:
       - name: runner
-        image: ghcr.io/actions/actions-runner:latest
+        image: azuradara/guarc:latest
+        imagePullPolicy: IfNotPresent
         command: ['/home/runner/run.sh']
         env:
           - name: DOCKER_HOST

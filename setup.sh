@@ -4,6 +4,7 @@ set -o nounset
 
 NAMESPACE_CONTROLLER="arc-systems"
 NAMESPACE_RUNNERS="arc-runners"
+RUNNER_IMAGE="azuradara/guarc:latest"
 
 setup_kubeconfig() {
     mkdir -p ~/.kube
@@ -29,6 +30,13 @@ install_helm() {
     fi
     echo "Installing Helm..."
     curl -fsSL https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+}
+
+build_image() {
+    echo "Building runner image..."
+    docker build -t "$RUNNER_IMAGE" .
+    echo "Importing image into k3s containerd store..."
+    docker save "$RUNNER_IMAGE" | sudo k3s ctr images import -
 }
 
 install_arc_controller() {
@@ -81,6 +89,7 @@ main() {
 
     install_k3s
     install_helm
+    build_image
     kubectl create namespace "$NAMESPACE_RUNNERS" --dry-run=client -o yaml | kubectl apply -f -
     install_arc_controller
     create_secret "$org" "$pat"
