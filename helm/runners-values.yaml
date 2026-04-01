@@ -66,6 +66,9 @@ template:
             mountPath: /var/run
           - name: dind-externals
             mountPath: /home/runner/externals
+          - name: docker-config
+            mountPath: /root/.docker
+            readOnly: true
     volumes:
       - name: work
         emptyDir: {}
@@ -89,3 +92,10 @@ template:
         hostPath:
           path: /var/cache/arc/hostedtoolcache
           type: DirectoryOrCreate
+      - name: docker-config
+        secret:
+          secretName: arc-docker-config
+          optional: true
+          items:
+            - key: config.json
+              path: config.json

@@ -58,6 +58,23 @@ install_arc_controller() {
         --wait
 }
 
+create_docker_secret() {
+    if [[ -z "${DOCKER_USER:-}" || -z "${DOCKER_TOKEN:-}" ]]; then
+        echo "DOCKER_USER/DOCKER_TOKEN not set, skipping Docker Hub auth"
+        return
+    fi
+
+    echo "Creating Docker Hub credentials secret..."
+    local auth
+    auth=$(echo -n "${DOCKER_USER}:${DOCKER_TOKEN}" | base64 -w 0)
+    local config="{\"auths\":{\"https://index.docker.io/v1/\":{\"auth\":\"${auth}\"}}}"
+
+    kubectl create secret generic arc-docker-config \
+        --namespace "$NAMESPACE_RUNNERS" \
+        --from-literal=config.json="$config" \
+        --dry-run=client -o yaml | kubectl apply -f -
+}
+
 create_secret() {
     local org=$1
     local pat=$2
@@ -102,6 +119,7 @@ main() {
     kubectl create namespace "$NAMESPACE_RUNNERS" --dry-run=client -o yaml | kubectl apply -f -
     setup_cache_dirs
     install_arc_controller
+    create_docker_secret
     create_secret "$org" "$pat"
     install_runners "$org" "$max_runners"
 
