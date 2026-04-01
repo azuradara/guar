@@ -51,12 +51,19 @@ template:
             mountPath: /home/runner/.local/share/pnpm/store
           - name: tool-cache
             mountPath: /opt/hostedtoolcache
+          - name: docker-config
+            mountPath: /home/runner/.docker
+            readOnly: true
       - name: dind
         image: docker:dind
+        command: ["sh", "-c"]
         args:
-          - dockerd
-          - --host=unix:///var/run/docker.sock
-          - --group=123
+          - "dockerd --host=unix:///var/run/docker.sock --group=123 --registry-mirror=http://${HOST_IP}:5000"
+        env:
+          - name: HOST_IP
+            valueFrom:
+              fieldRef:
+                fieldPath: status.hostIP
         securityContext:
           privileged: true
         volumeMounts:
@@ -66,9 +73,6 @@ template:
             mountPath: /var/run
           - name: dind-externals
             mountPath: /home/runner/externals
-          - name: docker-config
-            mountPath: /root/.docker
-            readOnly: true
     volumes:
       - name: work
         emptyDir: {}

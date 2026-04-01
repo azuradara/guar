@@ -44,8 +44,24 @@ setup_cache_dirs() {
         /var/cache/arc/composer \
         /var/cache/arc/npm \
         /var/cache/arc/pnpm \
-        /var/cache/arc/hostedtoolcache
+        /var/cache/arc/hostedtoolcache \
+        /var/cache/arc/registry
     sudo chown -R 1001:123 /var/cache/arc
+}
+
+setup_registry_mirror() {
+    if docker ps -q -f name=registry-mirror | grep -q .; then
+        echo "Registry mirror already running, skipping"
+        return
+    fi
+    echo "Starting Docker registry mirror..."
+    docker run -d \
+        --restart=always \
+        --name registry-mirror \
+        -p 5000:5000 \
+        -e REGISTRY_PROXY_REMOTEURL=https://registry-1.docker.io \
+        -v /var/cache/arc/registry:/var/lib/registry \
+        registry:2
 }
 
 install_arc_controller() {
@@ -118,6 +134,7 @@ main() {
     build_image
     kubectl create namespace "$NAMESPACE_RUNNERS" --dry-run=client -o yaml | kubectl apply -f -
     setup_cache_dirs
+    setup_registry_mirror
     install_arc_controller
     create_docker_secret
     create_secret "$org" "$pat"
