@@ -39,6 +39,10 @@ template:
             mountPath: /var/run
       - name: dind
         image: docker:dind
+        args:
+          - dockerd
+          - --host=unix:///var/run/docker.sock
+          - --group=123
         securityContext:
           privileged: true
         volumeMounts:
