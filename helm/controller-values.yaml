@@ -11,4 +11,4 @@ replicaCount: 1
 
 # Restrict the controller to only watch the runners namespace.
 flags:
-  watchSingleNamespace: "arc-runners"
+  watchSingleNamespace: 'arc-runners'
