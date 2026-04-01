@@ -80,6 +80,7 @@ main() {
 
     install_k3s
     install_helm
+    kubectl create namespace "$NAMESPACE_RUNNERS" --dry-run=client -o yaml | kubectl apply -f -
     install_arc_controller
     create_secret "$org" "$pat"
     install_runners "$org" "$max_runners"
